@@ -3,7 +3,7 @@ class point_3D{
   float _y;
   float _z;
   float _k1 = 50;
-  float _k2 = 105;
+  float _k2 = camera_distance;
   float x_2d;
   float y_2d;
   float z_2d;
