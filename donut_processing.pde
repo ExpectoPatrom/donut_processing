@@ -6,13 +6,17 @@ int zoomHudX = 370;
 int zoomHudY = 470;
 int zoomHudWidth = 100;
 int zoomHudHeight = 10;
+float pos_x = 100;
+float pos_y = 100;
+float last_x = 0;
+float last_y = 0;
 void setup(){
   frameRate(60);
   size(500,500);
-  stroke(48,155,259);
+  stroke(0);
 }
 void draw(){
-  background(200);
+  background(255);
   clip(0, 0, 500, 450);
   float r2 = 50;
   float r1 = 35;
@@ -32,25 +36,35 @@ void draw(){
         float y = (r1*sin_tetha*cos_a) + ((-1*sin_a)*sin_phi*aux);
         float z = (r1*sin_tetha*sin_a) + (sin_phi*cos_a*aux);
         point_3D current = new point_3D(x,y,z);
-        point(int(current.x_2d)+100,int(current.y_2d)+100);
+        point(int(current.x_2d)+pos_x,int(current.y_2d)+pos_y);
       }
     }
   a+=1;
   a%=360;
   if(a%4==0 && a!=180){
-    background(200);
+    background(255);
   }
   noClip();
   rect(zoomHudX, zoomHudY, zoomHudWidth, zoomHudHeight);
   float eq = ((camera_distance*-5)/8) + 156.25;
-  rect(zoomHudX+eq-5,zoomHudY-5,10,20);
-  println(camera_distance,eq);
+  rect(zoomHudX+eq-15,zoomHudY-5,30,20);
+  fill(0);
+  rect(zoomHudX+eq-1,zoomHudY-3,2,15);
+  rect(zoomHudX+eq-8,zoomHudY+3.5,15,2);
+  if(playing==false){
+    rect(50,zoomHudY-13,2,25);
+    rect(60,zoomHudY-13,2,25);
+  }
+  fill(250);
+  last_x = mouseX;
+  last_y = mouseY;
 }
 
 void mouseClicked() {
   if (playing == true) {
-    noLoop();
     playing = false;
+    draw();
+    noLoop();
   } else {
     playing = true;
     if(a%4==0 && a!=180)a--;
@@ -68,4 +82,12 @@ void mouseWheel(MouseEvent event){
     camera_distance += 10;
     camera_distance = min(250.0,camera_distance);
   }
+}
+
+void mouseDragged()
+{
+  pos_x = max(pos_x-(0.5*(last_x-mouseX)),15);
+  pos_x = min(pos_x,490);
+  pos_y = max(pos_y-(0.5*(last_y-mouseY)),15);
+  pos_y = min(pos_y,435);
 }
